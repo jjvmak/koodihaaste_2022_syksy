@@ -1,0 +1,1 @@
+# koodihaaste_2022_syksy
