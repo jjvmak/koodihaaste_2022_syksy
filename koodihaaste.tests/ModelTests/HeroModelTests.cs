@@ -65,5 +65,22 @@ namespace koodihaaste.tests.ModelTests
 
         }
 
+        [Fact]
+        public void ShouldBeAbleToAttackOnlyWhenDelayTimeIsUp()
+        {
+            // No attack yet so last attack time should be 0.0
+            Assert.False(this.paprika.IsAbleToAttack(0.0));
+            Assert.Equal(0.0, this.paprika.lastAttackTime);
+
+            // Perform attack and set new last attack time
+            Assert.True(this.paprika.IsAbleToAttack(7.3));
+            paprika.lastAttackTime = 7.3;
+            Assert.Equal(7.3, this.paprika.lastAttackTime);
+            Assert.False(this.paprika.IsAbleToAttack(8.0));
+
+
+
+        }
+
     }
 }

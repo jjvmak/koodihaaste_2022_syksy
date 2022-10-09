@@ -14,7 +14,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = new ConfigurationBuilder();
-        var configuration = builder.Build(); // Tähän servicet
+        var configuration = builder.Build();
 
         var runner = new Runner();
         runner.Run();

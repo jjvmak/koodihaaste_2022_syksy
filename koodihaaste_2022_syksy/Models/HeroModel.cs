@@ -13,8 +13,7 @@ namespace koodihaaste_2022_syksy.Models
         public string Name { get; set; }
         public Stats Stats { get; set; }
         // ================================
-        
-        
+
         // ========== Creation ============
         public HeroModel()
         {
@@ -37,10 +36,18 @@ namespace koodihaaste_2022_syksy.Models
         public double DamageToEnemy(double enemyDef) 
             => Math.Round(Stats.Attack * ((100 - enemyDef) / 100), 2);
         
-        public double HealthAfterAttack(double enemyAttack) => Stats.Health - enemyAttack;
+        public double HealthAfterAttack(double enemyAttack) 
+            => Math.Round(Stats.Health - enemyAttack, 2);
         
         public bool StillAlive() => Stats.Health > 0;
-        // ==============================        
+        // ==============================
+
+        // ====== Attack and delay ========
+        public double lastAttackTime { get; set; } = 0.0;
+        public bool IsAbleToAttack(double gameTime) => gameTime - lastAttackTime >= Stats.Delay;
+
+        // ================================
+
 
     }
 
