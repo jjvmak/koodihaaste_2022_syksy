@@ -26,15 +26,24 @@ namespace koodihaaste_2022_syksy
         public async Task StartScreen()
         {
             Console.Clear();
-            SpectreUtils.CreateHeader();
-            var heroes = await SearchHero();
-            if (heroes.Count == 0)
+            SpectreUtils.CreateHeader("TAISTELEVAT PORKKANAT");
+
+            /*
+             * Jos peliä ei voida luoda vielä: haetaan hero1 ja hero 2
+             * ja asetetaan ne.
+             * 
+             * Jos peli on luotu siirrytään taistelunäkymään ja käynnistetään gameloop.
+             * 
+             * **/
+
+            if(!stateMachine.CanCreateGame())
             {
-                await NoResultsPage();
-            } else
-            {
-                await ShowHeroTable(heroes);
+                var heroes = await SearchHero();
+                var searchState = stateMachine.SetSearchResult(heroes);
+                if (searchState == ActionResult.Succes) await SelectHeroTable(heroes);
+                if (searchState == ActionResult.Fail) await NoResultsPage();
             }
+            
         }
 
         private async Task<List<HeroModel>> SearchHero()
@@ -52,25 +61,38 @@ namespace koodihaaste_2022_syksy
             return heroes;
         }
 
-        private async Task ShowHeroTable(List<HeroModel> heroes)
+        private async Task SelectHeroTable(List<HeroModel> heroes)
         {
             SpectreUtils.ShowTableOfHeroes(heroes);
-            SpectreUtils.WriteSimpleText("Valitse sankari(kirjoita rivin numero), tai suorita uusi haku (h)");
+            SpectreUtils.WriteSimpleText("Valitse sankari (id), tai suorita uusi haku (h)");
             var heroId = Console.ReadLine();
+
             if (heroId == "h")
             {
                 await StartScreen();
             }
             else
             {
-                SpectreUtils.WriteSimpleText("valittu sankari");
+                var succes = int.TryParse(heroId, out int result);
+                if (succes) await StartScreen(); // go to selection confirmation screen
+                if (!succes) await ErrorScreen("Virheellinen sankari id!");
             }
         }
 
         private async Task NoResultsPage()
         {
             Console.Clear();
-            SpectreUtils.WriteSimpleText("Ei hakutuloksia! Suorita uusi haku (paina mitä tahansa näppäintä)");
+            SpectreUtils.WriteSimpleText("Ei hakutuloksia! Suorita uusi haku (enter)");
+            Console.ReadLine();
+            await StartScreen();
+        }
+
+        private async Task ErrorScreen(string message) 
+        {
+            Console.Clear();
+            SpectreUtils.CreateHeader("ERROR");
+            SpectreUtils.WriteSimpleText(message);
+            SpectreUtils.WriteSimpleText("Paina enter jatkaaksesi");
             Console.ReadLine();
             await StartScreen();
         }

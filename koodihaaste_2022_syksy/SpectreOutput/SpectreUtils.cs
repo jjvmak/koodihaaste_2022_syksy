@@ -10,12 +10,12 @@ namespace koodihaaste_2022_syksy.SpectreOutput
 {
     public static class SpectreUtils
     {
-        public static void CreateHeader()
+        public static void CreateHeader(string header)
         {
             AnsiConsole.Write(
-                new FigletText("TAISTELEVAT PORKKANAT")
-                    .LeftAligned()
-                    .Color(Color.Red));
+                new FigletText(header)
+                    .Centered()
+                    .Color(Color.Magenta2_1));
         }
 
         public static void WriteSimpleText(string text)
