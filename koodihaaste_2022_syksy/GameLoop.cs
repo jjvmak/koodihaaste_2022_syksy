@@ -16,8 +16,9 @@ namespace koodihaaste_2022_syksy
             this.game = game;
         }
 
-        public void StartGame()
+        public void StartGame(double tickTime = 0.000001, bool enableAnnouncer = true)
         {
+            if (enableAnnouncer) Announcer.BattleBegins();
             var gameTime = 0.00;
             // Start the game
             game.gameState = GameState.Ongoing;
@@ -28,11 +29,11 @@ namespace koodihaaste_2022_syksy
                 // Tick the game
                 result = game.Tick(gameTime);
                 // Increase game time
-                gameTime += 0.01;
+                gameTime += tickTime;
             }
             // Game is over
             game.gameState = GameState.Ended;
-
+            if (enableAnnouncer) Announcer.AnnounceWinner(game);
         }
 
     }

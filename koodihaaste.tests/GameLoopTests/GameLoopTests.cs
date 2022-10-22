@@ -16,7 +16,7 @@ namespace koodihaaste.tests.GameLoopTests
         {
             var game = createNewGame();
             var gameLoop = new GameLoop(game);
-            gameLoop.StartGame();
+            gameLoop.StartGame(0.01, false);
 
             Assert.Equal(GameState.Ended, game.gameState);
             Assert.Equal(GameResult.Hero1Won, game.gameResult);

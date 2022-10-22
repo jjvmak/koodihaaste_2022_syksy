@@ -11,6 +11,9 @@ namespace koodihaaste_2022_syksy
         private StateMachine stateMachine;
         private IApiService apiService;
 
+        private HeroModel? hero1;
+        private HeroModel? hero2;
+
         public Runner(IHeroService heroService, IApiService apiService)
         {
             this.apiService = apiService;
@@ -27,23 +30,49 @@ namespace koodihaaste_2022_syksy
         {
             Console.Clear();
             SpectreUtils.CreateHeader("TAISTELEVAT PORKKANAT");
+            SpectreUtils.CreateCenterBlinking("-- PAINA ENTER --");
+            var search = Console.ReadLine();
 
+            await MainMenu();
+            
+        }
+
+        private async Task MainMenu()
+        {
+            Console.Clear();
+            SpectreUtils.CreateHeader("TAISTELEVAT PORKKANAT");
+
+            SpectreUtils.SelectedHeroes(hero1, hero2);
+            
             /*
-             * Jos peliä ei voida luoda vielä: haetaan hero1 ja hero 2
-             * ja asetetaan ne.
-             * 
-             * Jos peli on luotu siirrytään taistelunäkymään ja käynnistetään gameloop.
-             * 
-             * **/
+              * Jos peliä ei voida luoda vielä: haetaan hero1 ja hero 2
+              * ja asetetaan ne.
+              * 
+              * Jos peli on luotu siirrytään taistelunäkymään ja käynnistetään gameloop.
+              * 
+              * **/
 
-            if(!stateMachine.CanCreateGame())
+            if (!stateMachine.CanCreateGame())
             {
                 var heroes = await SearchHero();
                 var searchState = stateMachine.SetSearchResult(heroes);
                 if (searchState == ActionResult.Succes) await SelectHeroTable(heroes);
                 if (searchState == ActionResult.Fail) await NoResultsPage();
             }
-            
+            else
+            {
+                hero1.Color = "red";
+                hero2.Color = "blue";
+                var game = new Game(hero1, hero2);
+                var gameLoop = new GameLoop(game);
+                gameLoop.StartGame();
+
+                // reset game
+                stateMachine = new StateMachine();
+                hero1 = null;
+                hero2 = null;
+                await StartScreen();
+            }
         }
 
         private async Task<List<HeroModel>> SearchHero()
@@ -69,13 +98,25 @@ namespace koodihaaste_2022_syksy
 
             if (heroId == "h")
             {
-                await StartScreen();
+                await MainMenu();
             }
             else
             {
                 var succes = int.TryParse(heroId, out int result);
-                if (succes) await StartScreen(); // go to selection confirmation screen
+                if (succes) 
+                {
+                    if (!stateMachine.IsHero1Selected())
+                    {
+                        hero1 = heroes[result];
+                        stateMachine.SetHeroOne();
+                    }
+                    else if (!stateMachine.IsHero2Selected()) { 
+                        hero2 = heroes[result];
+                        stateMachine.SetHeroTwo();
+                    }
+                } // go to selection confirmation screen
                 if (!succes) await ErrorScreen("Virheellinen sankari id!");
+                await MainMenu();
             }
         }
 
@@ -84,7 +125,7 @@ namespace koodihaaste_2022_syksy
             Console.Clear();
             SpectreUtils.WriteSimpleText("Ei hakutuloksia! Suorita uusi haku (enter)");
             Console.ReadLine();
-            await StartScreen();
+            await MainMenu();
         }
 
         private async Task ErrorScreen(string message) 
@@ -94,7 +135,7 @@ namespace koodihaaste_2022_syksy
             SpectreUtils.WriteSimpleText(message);
             SpectreUtils.WriteSimpleText("Paina enter jatkaaksesi");
             Console.ReadLine();
-            await StartScreen();
+            await MainMenu();
         }
     }
 }

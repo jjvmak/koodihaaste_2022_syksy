@@ -45,10 +45,10 @@ namespace koodihaaste.tests.ModelTests
         {
             var game = createNewGame();
 
-            game.PerformAttack(game.hero1, game.hero2, 0.0);
+            game.PerformAttack(game.hero1, game.hero2, 0.0, false);
             Assert.Equal(24.46, game.hero2.Stats.Health);
 
-            game.PerformAttack(game.hero2, game.hero1, 0.0);
+            game.PerformAttack(game.hero2, game.hero1, 0.0, false);
             Assert.Equal(27.04, game.hero1.Stats.Health);
 
         }
@@ -60,12 +60,12 @@ namespace koodihaaste.tests.ModelTests
             var game = createNewGame();
 
             // Not started yet and timer is not running
-            var state = game.Tick(gameTime);
+            var state = game.Tick(gameTime, false);
             Assert.Equal(GameResult.UnDecided, state);
 
             // Start the game
             game.gameState = GameState.Ongoing;
-            state = game.Tick(gameTime);
+            state = game.Tick(gameTime, false);
             Assert.Equal(GameResult.UnDecided, state);
             // Both should have full health
             Assert.Equal(33.0, game.hero1.Stats.Health);
@@ -73,7 +73,7 @@ namespace koodihaaste.tests.ModelTests
 
             // Tick 1 second
             gameTime = 1.0;
-            state = game.Tick(gameTime);
+            state = game.Tick(gameTime, false);
             Assert.Equal(GameResult.UnDecided, state);
             // Neither should have lost any health since delay period has not passed
             Assert.Equal(33.0, game.hero1.Stats.Health);
@@ -81,7 +81,7 @@ namespace koodihaaste.tests.ModelTests
 
             // Tick 6.40 seconds
             gameTime = 6.40;
-            state = game.Tick(gameTime);
+            state = game.Tick(gameTime, false);
             Assert.Equal(GameResult.UnDecided, state);
             // Porkkana has attacked
             Assert.Equal(33.0, game.hero1.Stats.Health);
@@ -89,7 +89,7 @@ namespace koodihaaste.tests.ModelTests
 
             // Tick 7.30 seconds
             gameTime = 7.30;
-            state = game.Tick(gameTime);
+            state = game.Tick(gameTime, false);
             Assert.Equal(GameResult.UnDecided, state);
             // Paprika has attacked
             Assert.Equal(27.04, game.hero1.Stats.Health);
@@ -99,7 +99,7 @@ namespace koodihaaste.tests.ModelTests
             while (gameTime < 38.50)
             {
                 gameTime += 0.1;
-                state = game.Tick(gameTime);
+                state = game.Tick(gameTime, false);
             }
 
             Assert.Equal(GameResult.Hero1Won, state);
@@ -109,6 +109,7 @@ namespace koodihaaste.tests.ModelTests
         private Game createNewGame() {
             var porkkana = new HeroModel()
             {
+                Speciality = "not",
                 Name = "porkkana",
                 Stats = new Stats()
                 {
@@ -121,6 +122,7 @@ namespace koodihaaste.tests.ModelTests
 
             var paprika = new HeroModel()
             {
+                Speciality = "not",                
                 Name = "paprika",
                 Stats = new Stats()
                 {

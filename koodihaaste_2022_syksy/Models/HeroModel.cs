@@ -12,6 +12,9 @@ namespace koodihaaste_2022_syksy.Models
         // ========== Properties ==========
         public string Name { get; set; }
         public Stats Stats { get; set; }
+        public string Color { get; set; }
+        public string Speciality { get; set; }
+        public int AttackCount { get; set; } = 0;
         // ================================
 
         // ========== Creation ============
@@ -19,12 +22,39 @@ namespace koodihaaste_2022_syksy.Models
         {
             Name = "";
             Stats = Stats.Empty();
+            Color = "white";
         }
 
         public HeroModel(string name, Stats stats)
         {
+            // Set speciality for her
+            if (Speciality == null) {
+                Random rng = new Random();
+                var d3 = rng.Next(3) + 1;
+                switch (d3)
+                {
+                    // Miekka
+                    case 1:
+                        stats.Attack = stats.Attack * 1.2;
+                        Speciality = "Taikamiekka";
+                        break;
+                    // Kilpi
+                    case 2:
+                        stats.Defence = stats.Defence * 1.4;
+                        Speciality = "Mithrilkilpi";
+                        break;
+                    // Kengät
+                    case 3:
+                        stats.Delay = stats.Delay * 0.8;
+                        Speciality = "Nopeuskengät";
+                        break;
+                }
+            }
+            
+
             Name = name;
             Stats = stats;
+            Color = "white";
         }
 
         private static string NameFromDTO(ItemDTO dto) => dto.name != null ? (dto.name.fi != null ? dto.name.fi : ""): "";
@@ -69,4 +99,12 @@ namespace koodihaaste_2022_syksy.Models
         public static Stats Empty() => new Stats() { Defence = 0, Delay = 0, Attack = 0, Health = 0 };
 
     }
+
+    public enum Speciality
+    {
+        Taikamiekka,
+        Mithrilkilpi,
+        Nopeuskengät,        
+    }
+    
 }

@@ -17,6 +17,7 @@ namespace koodihaaste.tests.ModelTests
         {
             this.porkkana = new HeroModel()
             {
+                Speciality = "not",
                 Name = "porkkana",
                 Stats = new Stats()
                 {
@@ -29,6 +30,7 @@ namespace koodihaaste.tests.ModelTests
 
             this.paprika = new HeroModel()
             {
+                Speciality = "not",
                 Name = "paprika",
                 Stats = new Stats()
                 {

@@ -67,14 +67,10 @@ namespace koodihaaste_2022_syksy
 
         // Status checkers
         public bool CanSelectHero() => search == ActionResult.Succes;
-
         public bool CanCreateGame() => hero1 == Initialized.Yes && hero2 == Initialized.Yes;
-
         public bool CanStartFight() => game == Initialized.Yes;
-
-
-    
-        
+        public bool IsHero1Selected() => hero1 == Initialized.Yes;
+        public bool IsHero2Selected() => hero2 == Initialized.Yes;
     }
 }
 
