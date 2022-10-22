@@ -35,6 +35,8 @@ namespace koodihaaste_2022_syksy
             SpectreUtils.CreateHeader("HÄVIÄJÄ");
             SpectreUtils.HeroDetails(loser);
 
+            SpectreUtils.WriteSimpleText("Scrollaa ylöspäin nähdäksesi taistelun tiimellyksen!");
+            SpectreUtils.WriteSimpleText("Paina enter aloittaaksesi uuden taiston!");
 
             Console.ReadLine();
         }

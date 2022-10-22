@@ -66,7 +66,6 @@ namespace koodihaaste_2022_syksy
                 var game = new Game(hero1, hero2);
                 var gameLoop = new GameLoop(game);
                 gameLoop.StartGame();
-
                 // reset game
                 stateMachine = new StateMachine();
                 hero1 = null;
@@ -94,6 +93,7 @@ namespace koodihaaste_2022_syksy
         {
             SpectreUtils.ShowTableOfHeroes(heroes);
             SpectreUtils.WriteSimpleText("Valitse sankari (id), tai suorita uusi haku (h)");
+            SpectreUtils.DisplaySpecialityBonuses();
             var heroId = Console.ReadLine();
 
             if (heroId == "h")
@@ -116,6 +116,7 @@ namespace koodihaaste_2022_syksy
                     }
                 } // go to selection confirmation screen
                 if (!succes) await ErrorScreen("Virheellinen sankari id!");
+                Console.Clear();
                 await MainMenu();
             }
         }

@@ -87,6 +87,16 @@ namespace koodihaaste_2022_syksy.SpectreOutput
             SpectreUtils.WriteSimpleText("");
         }
 
+        internal static void DisplaySpecialityBonuses()
+        {
+            var miekka = "Taikamiekka";
+            var kilpi = "Mithrilkilpi";
+            var kengat = "Nopeuskengät";
+            var info = $"[green]{miekka}[/]: antaa hyökkäyksille lisävahinkoa! [green]{kilpi}[/]: tekee puolustuksesta vahvemman! [green]{kengat}[/]: vähentää hyökkäysviivettä, sekä antaa mahdollisuuden väistää vihollisen iskun!";
+            SpectreUtils.WriteSimpleText("");
+            SpectreUtils.WriteSimpleText(info);
+        }
+
         internal static void SelectedHeroes(HeroModel? hero1, HeroModel? hero2)
         {
             AnsiConsole.WriteLine();
