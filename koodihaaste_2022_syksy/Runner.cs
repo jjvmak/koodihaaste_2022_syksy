@@ -31,10 +31,9 @@ namespace koodihaaste_2022_syksy
             Console.Clear();
             SpectreUtils.CreateHeader("TAISTELEVAT PORKKANAT");
             SpectreUtils.CreateCenterBlinking("-- PAINA ENTER --");
-            var search = Console.ReadLine();
+            Console.ReadLine();
 
             await MainMenu();
-            
         }
 
         private async Task MainMenu()
@@ -43,15 +42,9 @@ namespace koodihaaste_2022_syksy
             SpectreUtils.CreateHeader("TAISTELEVAT PORKKANAT");
 
             SpectreUtils.SelectedHeroes(hero1, hero2);
-            
-            /*
-              * Jos peliä ei voida luoda vielä: haetaan hero1 ja hero 2
-              * ja asetetaan ne.
-              * 
-              * Jos peli on luotu siirrytään taistelunäkymään ja käynnistetään gameloop.
-              * 
-              * **/
 
+            // Check if the game can be created
+            // If not: proceed to hero search
             if (!stateMachine.CanCreateGame())
             {
                 var heroes = await SearchHero();
@@ -59,14 +52,18 @@ namespace koodihaaste_2022_syksy
                 if (searchState == ActionResult.Succes) await SelectHeroTable(heroes);
                 if (searchState == ActionResult.Fail) await NoResultsPage();
             }
+            // Game can be created
             else
             {
+                // Set colors for contenters
                 hero1.Color = "red";
                 hero2.Color = "blue";
+                // Create game, gameloop and start the gameloop
                 var game = new Game(hero1, hero2);
                 var gameLoop = new GameLoop(game);
                 gameLoop.StartGame();
-                // reset game
+
+                // After the game is over, reset the state machine, heroes and go back to start screen
                 stateMachine = new StateMachine();
                 hero1 = null;
                 hero2 = null;
@@ -79,11 +76,10 @@ namespace koodihaaste_2022_syksy
             SpectreUtils.WriteSimpleText("Etsi sankaria: ");
             
             var search = Console.ReadLine();
-            var heroes = await heroService.SearchHeroes(search);
+            var heroes = await heroService.SearchHeroes(search ?? "");
             
             await SpectreUtils.Proggres("prosessoidaan sankareita");
             
-            SpectreUtils.WriteSimpleText($"Hakusanalla {search} löytyi {heroes.Count} sankaria");
             Console.Clear();
             
             return heroes;
@@ -102,16 +98,22 @@ namespace koodihaaste_2022_syksy
             }
             else
             {
-                var succes = int.TryParse(heroId, out int result);
+                var succes = int.TryParse(heroId, out int idIndex);
+                
                 if (succes) 
                 {
+
+                    // Check if the ID can be selected
+                    // ID cant be negative or larger than the list
+                    if ( idIndex < 0 || idIndex > heroes.Count - 1) await ErrorScreen("Virheellinen sankari id!");
+
                     if (!stateMachine.IsHero1Selected())
                     {
-                        hero1 = heroes[result];
+                        hero1 = heroes[idIndex];
                         stateMachine.SetHeroOne();
                     }
                     else if (!stateMachine.IsHero2Selected()) { 
-                        hero2 = heroes[result];
+                        hero2 = heroes[idIndex];
                         stateMachine.SetHeroTwo();
                     }
                 } // go to selection confirmation screen

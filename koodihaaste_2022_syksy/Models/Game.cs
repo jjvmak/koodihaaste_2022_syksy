@@ -44,7 +44,7 @@ namespace koodihaaste_2022_syksy.Models
                     Announcer.AnnounceCriticalDamage(attacker);
                 }
 
-                // Chance to miss attack
+                // Chance to dodge the attack
                 d20 = rng.Next(20) + 1;
                 if (d20 > 18 && defender.Speciality == "Nopeuskengät")
                 {
@@ -67,8 +67,6 @@ namespace koodihaaste_2022_syksy.Models
             // Increment attack count
             attacker.AttackCount = attacker.AttackCount + 1;
 
-            // Announce attack turn
-           
         }
 
         public GameResult Tick(double gameTime, bool allowCriticals = true)
