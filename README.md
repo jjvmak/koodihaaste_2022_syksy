@@ -30,6 +30,7 @@ dotnet build
 dotnet run --project koodihaaste_2022_syksy
 ```
 https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build
+
 https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-run
 
 Testien ajaminen.
